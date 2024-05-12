@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "run:backend": "npx tsx --tsconfig tsconfig.base.json --watch apps/backend/src/main.ts"
+    "run:backend": "npx tsx --tsconfig tsconfig.base.json --watch apps/backend/src/main.ts",
+    "build:backend": "npx nx run backend:build:production"
   },
   "private": true,
   "dependencies": {

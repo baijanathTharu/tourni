@@ -1,12 +1,12 @@
-import { UseCase } from "../../user-case";
-import { Tournament } from "../tournament-entity";
-import { TournamentException } from "../tournament-exception";
-import { TournamentRepository } from "../tournament-repo";
+import { UseCase } from '../../user-case';
+import { Tournament } from '../tournament-entity';
+import { TournamentException } from '../tournament-exception';
+import { TournamentRepository } from '../tournament-repo';
 
 export interface UpdateTournamentUseCaseRequest {
   id: string;
   name?: string;
-  tournamentOn?: Date;
+  tournamentOn?: string;
 }
 
 export interface UpdateTournamentUseCaseResponse {
@@ -27,13 +27,15 @@ export class UpdateTournamentUseCase
     if (!tournament) {
       throw TournamentException.notFound({
         name: request.name,
-        message: "tournament not found",
+        message: 'tournament not found',
         id: request.id,
       });
     }
 
     tournament.name = request.name || tournament.name;
-    tournament.tournamentOn = request.tournamentOn || tournament.tournamentOn;
+    tournament.tournamentOn = request.tournamentOn
+      ? request.tournamentOn
+      : tournament.tournamentOn;
 
     await this.repo.save(tournament);
 
