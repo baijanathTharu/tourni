@@ -1,10 +1,11 @@
-import axios from 'axios';
+import { config } from '../config';
 
-describe('GET /', () => {
+describe('GET /ping', () => {
   it('should return a message', async () => {
-    const res = await axios.get(`/`);
+    const res = await fetch(`${config.BACKEND_URL}/ping`);
+    const data = await res.json();
 
     expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
+    expect(data).toEqual({ message: 'hello from tourni' });
   });
 });
