@@ -1,5 +1,9 @@
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
+import { ZodSchema } from 'zod/lib';
+
+extendZodWithOpenApi(z);
 
 const c = initContract();
 
@@ -29,36 +33,55 @@ const TournamentSchema = z.object({
     }),
 });
 
-export const contract = c.router({
+function getSchema(schema?: ZodSchema) {
+  return z.object({
+    isSuccess: z.boolean(),
+    data: schema || z.null(),
+    message: z.string(),
+    details: z.record(z.unknown()).optional(),
+  });
+}
+
+export const tournamentContract = c.router({
+  ping: {
+    method: 'GET',
+    path: '/ping',
+    responses: {
+      200: z.object({
+        message: z.string(),
+      }),
+    },
+  },
   createTournament: {
     method: 'POST',
     path: '/v1/tournament/create',
     responses: {
-      201: z.object({
-        isSuccess: z.boolean(),
-        data: TournamentSchema,
-        message: z.string(),
-        details: z.record(z.unknown()).optional(),
-      }),
-      400: z.object({
-        isSuccess: z.boolean(),
-        data: z.null(),
-        message: z.string(),
-        details: z.record(z.unknown()).optional(),
-      }),
-      500: z.object({
-        isSuccess: z.boolean(),
-        data: z.null(),
-        message: z.string(),
-        details: z.record(z.unknown()).optional(),
-      }),
+      201: getSchema(TournamentSchema),
+      400: getSchema(),
+      500: getSchema(),
     },
     body: TournamentSchema.pick({
       name: true,
       createdBy: true,
       tournamentOn: true,
+    }).openapi({
+      title: 'Tournament',
+      mediaExamples: {
+        myExample: {
+          value: {
+            name: 'PubG',
+            createdBy: 'Ram',
+            tournamentOn: '2024-05-12T16:12:29.657Z',
+          },
+          summary: 'Example of a user',
+        },
+      },
     }),
     summary: 'Create a tournament',
     description: 'Create a tournament',
   },
+});
+
+export const contract = c.router({
+  tournaments: tournamentContract,
 });

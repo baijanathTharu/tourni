@@ -1,12 +1,12 @@
-import { CreateTournamentUseCase } from '../modules/tournament/use-cases/create-tournament-use-case';
-import { TournamentException } from '../modules/tournament/tournament-exception';
-import { MemoryTournamentRepositoryImplementation } from '../repo/mem-tournament-repo';
+import { CreateTournamentUseCase } from '../../modules/tournament/use-cases/create-tournament-use-case';
+import { TournamentException } from '../../modules/tournament/tournament-exception';
+import { MemoryTournamentRepositoryImplementation } from '../../repo/mem-tournament-repo';
 import { AppRouteImplementationOrOptions } from '@ts-rest/express/src/lib/types';
-import { contract } from '@tourni-nx/contract';
-import { getStatusCode } from '../types';
+import { tournamentContract } from '@tourni-nx/contract';
+import { getStatusCode } from '../../types';
 
 export const createTournament: AppRouteImplementationOrOptions<
-  typeof contract.createTournament
+  typeof tournamentContract.createTournament
 > = async ({ req: { body } }) => {
   try {
     const useCase = new CreateTournamentUseCase(
@@ -14,8 +14,13 @@ export const createTournament: AppRouteImplementationOrOptions<
     );
     const useCaseOutput = await useCase.execute({
       name: body.name,
-      createdBy: body.name,
+      createdBy: body.createdBy,
       tournamentOn: body.tournamentOn,
+    });
+    console.log({
+      name: useCaseOutput.tournament.name,
+      tournamentOn: useCaseOutput.tournament.tournamentOn,
+      createdBy: useCaseOutput.tournament.name,
     });
 
     return {
@@ -24,8 +29,8 @@ export const createTournament: AppRouteImplementationOrOptions<
         isSuccess: true,
         data: {
           name: useCaseOutput.tournament.name,
-          tournamentOn: useCaseOutput.tournament.tournamentOn,
           createdBy: useCaseOutput.tournament.createdBy,
+          tournamentOn: useCaseOutput.tournament.tournamentOn,
         },
         message: 'Tournament created successfully',
       },

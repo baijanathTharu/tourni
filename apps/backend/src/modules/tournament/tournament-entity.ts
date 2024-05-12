@@ -45,6 +45,10 @@ export class Tournament {
     this.props.createdBy = createdBy;
   }
 
+  public get createdBy() {
+    return this.props.createdBy;
+  }
+
   public toJSON(): TournamentProps & { id: string } {
     return {
       id: this.id,
