@@ -4,6 +4,7 @@ import { MemoryTournamentRepositoryImplementation } from '../../repo/mem-tournam
 import { AppRouteImplementationOrOptions } from '@ts-rest/express/src/lib/types';
 import { tournamentContract } from '@tourni-nx/contract';
 import { getStatusCode } from '../../types';
+import { TournamentMapper } from './tournament-mapper';
 
 export const createTournament: AppRouteImplementationOrOptions<
   typeof tournamentContract.createTournament
@@ -17,21 +18,14 @@ export const createTournament: AppRouteImplementationOrOptions<
       createdBy: body.createdBy,
       tournamentOn: body.tournamentOn,
     });
-    console.log({
-      name: useCaseOutput.tournament.name,
-      tournamentOn: useCaseOutput.tournament.tournamentOn,
-      createdBy: useCaseOutput.tournament.name,
-    });
+
+    const response = TournamentMapper.toResponse(useCaseOutput.tournament);
 
     return {
       status: 201,
       body: {
         isSuccess: true,
-        data: {
-          name: useCaseOutput.tournament.name,
-          createdBy: useCaseOutput.tournament.createdBy,
-          tournamentOn: useCaseOutput.tournament.tournamentOn,
-        },
+        data: response,
         message: 'Tournament created successfully',
       },
     };

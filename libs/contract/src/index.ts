@@ -32,6 +32,13 @@ const TournamentSchema = z.object({
       message: 'createdBy must be at most 100 characters long',
     }),
 });
+export type TTournamentSchema = z.infer<typeof TournamentSchema>;
+const CreateTournamentBodySchema = TournamentSchema.pick({
+  name: true,
+  createdBy: true,
+  tournamentOn: true,
+});
+export type TCreateTournamentBodySchema = z.infer<typeof TournamentSchema>;
 
 function getSchema(schema?: ZodSchema) {
   return z.object({
@@ -60,11 +67,7 @@ export const tournamentContract = c.router({
       400: getSchema(),
       500: getSchema(),
     },
-    body: TournamentSchema.pick({
-      name: true,
-      createdBy: true,
-      tournamentOn: true,
-    }).openapi({
+    body: CreateTournamentBodySchema.openapi({
       title: 'Tournament',
       mediaExamples: {
         myExample: {
