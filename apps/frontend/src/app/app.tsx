@@ -1,10 +1,15 @@
 import { QCProvider } from './query-client-provider';
 import { Router } from './router';
+import { NextUIProvider } from '@nextui-org/react';
 
 export function App() {
   return (
     <QCProvider>
-      <Router />
+      <NextUIProvider>
+        <main className="">
+          <Router />
+        </main>
+      </NextUIProvider>
     </QCProvider>
   );
 }
