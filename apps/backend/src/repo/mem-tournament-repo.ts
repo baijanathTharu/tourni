@@ -1,23 +1,30 @@
 import { Tournament } from '../modules/tournament/tournament-entity';
 import { TournamentRepository } from '../modules/tournament/tournament-repo';
 
+let tournaments: Tournament[] = [];
 export class MemoryTournamentRepositoryImplementation
   implements TournamentRepository
 {
-  tournaments: Tournament[] = [];
   async create(tournament: Tournament): Promise<void> {
-    this.tournaments.push(tournament);
+    tournaments.push(tournament);
   }
-  findById(id: string): Promise<Tournament | null> {
-    throw new Error('Method not implemented.');
+  async findById(id: string): Promise<Tournament | null> {
+    return tournaments.find((t) => t.id === id) || null;
   }
-  save(tournamet: Tournament): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async save(tournament: Tournament): Promise<boolean> {
+    tournaments = tournaments.map((t) => {
+      if (t.id === tournament.id) {
+        return tournament;
+      }
+      return t;
+    });
+    return true;
   }
   async findAll(opts: { skip: number; limit: number }): Promise<Tournament[]> {
-    return this.tournaments;
+    return tournaments;
   }
-  delete(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async delete(id: string): Promise<boolean> {
+    tournaments = tournaments.filter((t) => t.id !== id);
+    return true;
   }
 }

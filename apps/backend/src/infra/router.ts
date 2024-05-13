@@ -1,4 +1,4 @@
-import { contract } from '@tourni-nx/contract';
+import { contract } from '@tourni-nx/contract/index';
 import { initServer } from '@ts-rest/express';
 import { tournamentRouter } from './tournament/router';
 

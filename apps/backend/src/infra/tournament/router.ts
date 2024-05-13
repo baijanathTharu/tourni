@@ -1,6 +1,10 @@
 import { tournamentContract } from '@tourni-nx/contract/tournament';
 import { initServer } from '@ts-rest/express';
-import { createTournament } from './tournament-infra';
+import {
+  createTournament,
+  deleteTournament,
+  updateTournament,
+} from './tournament-infra';
 
 const s = initServer();
 
@@ -14,4 +18,6 @@ export const tournamentRouter = s.router(tournamentContract, {
     };
   },
   createTournament,
+  updateTournament,
+  deleteTournament,
 });

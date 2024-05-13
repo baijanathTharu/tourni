@@ -1,4 +1,4 @@
-import { contract } from '@tourni-nx/contract';
+import { contract } from '@tourni-nx/contract/index';
 import { generateOpenApi } from '@ts-rest/open-api';
 
 export const openApiDocument = generateOpenApi(

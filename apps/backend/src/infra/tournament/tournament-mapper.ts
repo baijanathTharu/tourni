@@ -4,6 +4,7 @@ import { Tournament } from '../../modules/tournament/tournament-entity';
 export class TournamentMapper {
   public static toResponse(tournament: Tournament): TTournamentSchema {
     return {
+      id: tournament.id,
       name: tournament.name,
       createdBy: tournament.createdBy,
       tournamentOn: tournament.tournamentOn,

@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import helmet from 'helmet';
 import { randomUUID } from 'crypto';
 import compression from 'compression';
-import { contract } from '@tourni-nx/contract';
+import { contract } from '@tourni-nx/contract/index';
 import { openApiDocument } from './utils/openapi';
 import { router } from './infra/router';
 

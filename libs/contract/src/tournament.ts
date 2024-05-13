@@ -8,6 +8,7 @@ extendZodWithOpenApi(z);
 const c = initContract();
 
 const TournamentSchema = z.object({
+  id: z.string().uuid(),
   name: z
     .string({
       message: 'name must be a string',
@@ -40,6 +41,21 @@ const CreateTournamentBodySchema = TournamentSchema.pick({
 });
 export type TCreateTournamentBodySchema = z.infer<typeof TournamentSchema>;
 
+const UpdateTournamentBodySchema = TournamentSchema.pick({
+  name: true,
+  tournamentOn: true,
+});
+export type TUpdateTournamentBodySchema = z.infer<
+  typeof UpdateTournamentBodySchema
+>;
+
+const DeleteTournamentBodySchema = TournamentSchema.pick({
+  createdBy: true,
+});
+export type TDeleteTournamentBodySchema = z.infer<
+  typeof DeleteTournamentBodySchema
+>;
+
 export const tournamentContract = c.router({
   ping: {
     method: 'GET',
@@ -67,11 +83,57 @@ export const tournamentContract = c.router({
             createdBy: 'Ram',
             tournamentOn: '2024-05-12T16:12:29.657Z',
           },
-          summary: 'Example of a user',
+          summary: 'Example of a tournament',
         },
       },
     }),
     summary: 'Create a tournament',
     description: 'Create a tournament',
+  },
+  updateTournament: {
+    method: 'POST',
+    path: '/v1/tournament/update/:tournamentId',
+    responses: {
+      201: getSchema(TournamentSchema),
+      400: getSchema(),
+      500: getSchema(),
+    },
+    body: UpdateTournamentBodySchema.openapi({
+      title: 'Tournament',
+      mediaExamples: {
+        myExample: {
+          value: {
+            name: 'PubG',
+            tournamentOn: '2024-05-12T16:12:29.657Z',
+          },
+          summary: 'Example of a tournament',
+        },
+      },
+    }),
+    summary: 'Update a tournament',
+    description: 'Update a tournament',
+  },
+  deleteTournament: {
+    method: 'POST',
+    path: '/v1/tournament/delete/:tournamentId',
+    responses: {
+      201: getSchema(TournamentSchema),
+      400: getSchema(),
+      500: getSchema(),
+    },
+    body: DeleteTournamentBodySchema.openapi({
+      title: 'Tournament',
+      mediaExamples: {
+        myExample: {
+          value: {
+            createdBy: 'Ram',
+            id: 'fnakjfkhy16371',
+          },
+          summary: 'Example of a tournament',
+        },
+      },
+    }),
+    summary: 'Delete a tournament',
+    description: 'delete your tournament',
   },
 });
