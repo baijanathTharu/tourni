@@ -136,4 +136,15 @@ export const tournamentContract = c.router({
     summary: 'Delete a tournament',
     description: 'delete your tournament',
   },
+  tournaments: {
+    method: 'GET',
+    path: '/v1/tournaments',
+    responses: {
+      200: getSchema(z.array(TournamentSchema)),
+      400: getSchema(),
+      500: getSchema(),
+    },
+    summary: 'Get all tournaments',
+    description: 'Get all tournaments',
+  },
 });

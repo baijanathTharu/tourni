@@ -3,6 +3,7 @@ import { initServer } from '@ts-rest/express';
 import {
   createTournament,
   deleteTournament,
+  tournaments,
   updateTournament,
 } from './tournament-infra';
 
@@ -17,7 +18,12 @@ export const tournamentRouter = s.router(tournamentContract, {
       },
     };
   },
+
+  // mutations
   createTournament,
   updateTournament,
   deleteTournament,
+
+  // queries
+  tournaments,
 });
