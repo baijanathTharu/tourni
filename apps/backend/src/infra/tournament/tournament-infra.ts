@@ -2,7 +2,7 @@ import { CreateTournamentUseCase } from '../../modules/tournament/use-cases/crea
 import { TournamentException } from '../../modules/tournament/tournament-exception';
 import { MemoryTournamentRepositoryImplementation } from '../../repo/mem-tournament-repo';
 import { AppRouteImplementationOrOptions } from '@ts-rest/express/src/lib/types';
-import { tournamentContract } from '@tourni-nx/contract';
+import { tournamentContract } from '@tourni-nx/contract/tournament';
 import { getStatusCode } from '../../types';
 import { TournamentMapper } from './tournament-mapper';
 

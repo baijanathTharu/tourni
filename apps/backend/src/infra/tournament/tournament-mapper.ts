@@ -1,4 +1,4 @@
-import { TTournamentSchema } from '@tourni-nx/contract';
+import { TTournamentSchema } from '@tourni-nx/contract/tournament';
 import { Tournament } from '../../modules/tournament/tournament-entity';
 
 export class TournamentMapper {
