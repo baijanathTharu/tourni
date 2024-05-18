@@ -7,9 +7,16 @@ import {
   Divider,
   Link,
   Image,
+  Button,
 } from '@nextui-org/react';
 
-export function Card() {
+export function Card({
+  onUpdate,
+  id,
+}: {
+  id: string;
+  onUpdate: (id: string) => void;
+}) {
   return (
     <NextUICard className="max-w-[400px]">
       <CardHeader className="flex gap-3">
@@ -31,6 +38,7 @@ export function Card() {
       </CardBody>
       <Divider />
       <CardFooter>
+        <Button onClick={() => onUpdate(id)}>onUpdate</Button>
         <Link
           isExternal
           showAnchorIcon

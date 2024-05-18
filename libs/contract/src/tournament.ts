@@ -34,7 +34,7 @@ const TournamentSchema = z.object({
     }),
 });
 export type TTournamentSchema = z.infer<typeof TournamentSchema>;
-const CreateTournamentBodySchema = TournamentSchema.pick({
+export const CreateTournamentBodySchema = TournamentSchema.pick({
   name: true,
   createdBy: true,
   tournamentOn: true,
@@ -144,7 +144,6 @@ export const tournamentContract = c.router({
     responses: {
       200: BASE_SCHEMA.extend({
         data: z.array(TournamentSchema),
-        isSuccess: z.enum(['true']),
       }),
       400: getErrorSchema(),
       500: getErrorSchema(),

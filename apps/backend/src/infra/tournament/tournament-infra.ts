@@ -166,7 +166,7 @@ export const tournaments: AppRouteImplementationOrOptions<
     );
 
     return {
-      status: 201,
+      status: 200,
       body: {
         isSuccess: true,
         data: response,
