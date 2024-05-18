@@ -1,10 +1,13 @@
-import { ZodSchema, z } from 'zod';
+import { z } from 'zod';
 
-export function getSchema(schema?: ZodSchema) {
-  return z.object({
-    isSuccess: z.boolean(),
-    data: schema || z.null(),
-    message: z.string(),
-    details: z.record(z.unknown()).optional(),
+export const BASE_SCHEMA = z.object({
+  message: z.string(),
+  details: z.record(z.unknown()).optional(),
+  isSuccess: z.boolean(),
+});
+
+export function getErrorSchema() {
+  return BASE_SCHEMA.extend({
+    data: z.null(),
   });
 }

@@ -22,7 +22,7 @@ export const AcmeLogo = () => (
   </svg>
 );
 
-export function Navbar({ children }: { children: React.ReactNode }) {
+export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
@@ -53,16 +53,16 @@ export function Navbar({ children }: { children: React.ReactNode }) {
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
           <AcmeLogo />
-          <p className="font-bold text-inherit">ACME</p>
+          <p className="font-bold text-inherit">TOURNI</p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarBrand>
           <AcmeLogo />
-          <p className="font-bold text-inherit">ACME</p>
+          <p className="font-bold text-inherit">TOURNI</p>
         </NavbarBrand>
-        <NavbarItem>
+        {/* <NavbarItem>
           <Link color="foreground" href="#">
             Features
           </Link>
@@ -76,7 +76,7 @@ export function Navbar({ children }: { children: React.ReactNode }) {
           <Link color="foreground" href="#">
             Integrations
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
       </NavbarContent>
 
       <NavbarContent justify="end">

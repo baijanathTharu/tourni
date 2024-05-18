@@ -1,7 +1,7 @@
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
-import { getSchema } from './base';
+import { BASE_SCHEMA, getErrorSchema } from './base';
 
 extendZodWithOpenApi(z);
 
@@ -70,9 +70,11 @@ export const tournamentContract = c.router({
     method: 'POST',
     path: '/v1/tournament/create',
     responses: {
-      201: getSchema(TournamentSchema),
-      400: getSchema(),
-      500: getSchema(),
+      201: BASE_SCHEMA.extend({
+        data: TournamentSchema,
+      }),
+      400: getErrorSchema(),
+      500: getErrorSchema(),
     },
     body: CreateTournamentBodySchema.openapi({
       title: 'Tournament',
@@ -94,9 +96,9 @@ export const tournamentContract = c.router({
     method: 'POST',
     path: '/v1/tournament/update/:tournamentId',
     responses: {
-      201: getSchema(TournamentSchema),
-      400: getSchema(),
-      500: getSchema(),
+      201: BASE_SCHEMA.extend({ data: TournamentSchema }),
+      400: getErrorSchema(),
+      500: getErrorSchema(),
     },
     body: UpdateTournamentBodySchema.openapi({
       title: 'Tournament',
@@ -117,9 +119,9 @@ export const tournamentContract = c.router({
     method: 'POST',
     path: '/v1/tournament/delete/:tournamentId',
     responses: {
-      201: getSchema(TournamentSchema),
-      400: getSchema(),
-      500: getSchema(),
+      201: BASE_SCHEMA.extend({ data: TournamentSchema }),
+      400: getErrorSchema(),
+      500: getErrorSchema(),
     },
     body: DeleteTournamentBodySchema.openapi({
       title: 'Tournament',
@@ -140,9 +142,12 @@ export const tournamentContract = c.router({
     method: 'GET',
     path: '/v1/tournaments',
     responses: {
-      200: getSchema(z.array(TournamentSchema)),
-      400: getSchema(),
-      500: getSchema(),
+      200: BASE_SCHEMA.extend({
+        data: z.array(TournamentSchema),
+        isSuccess: z.enum(['true']),
+      }),
+      400: getErrorSchema(),
+      500: getErrorSchema(),
     },
     summary: 'Get all tournaments',
     description: 'Get all tournaments',
