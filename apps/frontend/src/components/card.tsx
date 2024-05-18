@@ -38,7 +38,7 @@ export function Card({
       </CardBody>
       <Divider />
       <CardFooter>
-        <Button onClick={() => onUpdate(id)}>onUpdate</Button>
+        <Button onClick={() => onUpdate(id)}>Edit</Button>
         <Link
           isExternal
           showAnchorIcon

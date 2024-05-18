@@ -7,6 +7,7 @@ import { Plus } from 'lucide-react';
 import { FormModal } from '../components/form-modal';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 
 export function TournamentList({
   data,
@@ -29,7 +30,9 @@ export function TournamentList({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const onUpdate = (id: string) => {
-    setSelectedId(id);
+    flushSync(() => {
+      setSelectedId(id);
+    });
     onOpen();
   };
 

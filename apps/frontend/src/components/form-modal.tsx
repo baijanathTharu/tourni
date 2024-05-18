@@ -11,7 +11,12 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { getLocalTimeZone } from '@internationalized/date';
+import {
+  getLocalTimeZone,
+  parseDate,
+  parseDateTime,
+  toCalendar,
+} from '@internationalized/date';
 import { client } from '../app/query-client';
 import { useEffect } from 'react';
 
@@ -64,6 +69,7 @@ export function FormModal({
     setValue,
     handleSubmit,
     reset,
+    getValues,
   } = useForm<TCreateTournamentBodySchema>({
     resolver: zodResolver(CreateTournamentBodySchema),
     mode: 'all',
@@ -167,7 +173,7 @@ export function FormModal({
                   label="Tournament Date"
                   isRequired
                   errorMessage={errors.tournamentOn?.message}
-                  // value={parseDate(getValues('tournamentOn').toString())}
+                  value={parseDate(getValues('tournamentOn').split('T')[0])}
                   onChange={(value) => {
                     setValue(
                       'tournamentOn',
