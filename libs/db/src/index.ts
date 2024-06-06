@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 
-export function db() {
+export function getDb() {
   return new PrismaClient();
 }

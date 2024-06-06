@@ -1,0 +1,61 @@
+{
+  "name": "cron",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cron/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/cron",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/cron/src/main.ts",
+        "tsConfig": "apps/cron/tsconfig.app.json",
+        "assets": ["apps/cron/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "generateLockfile": true,
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cron:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cron:build:development"
+        },
+        "production": {
+          "buildTarget": "cron:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/cron/Dockerfile . -t cron"
+    }
+  }
+}
