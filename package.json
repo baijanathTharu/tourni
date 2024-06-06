@@ -7,10 +7,12 @@
     "build:backend": "npx nx run backend:build:production",
     "run:frontend": "nx run frontend:serve",
     "build:frontend": "nx run frontend:build:production",
+    "build:cron": "nx run cron:build:production",
     "db:push": "npx prisma db push --schema=libs/db/prisma/schema.prisma",
     "db:deploy": "npx prisma db deploy --schema=libs/db/prisma/schema.prisma",
     "db:generate": "npx prisma generate --schema=libs/db/prisma/schema.prisma",
-    "test:cron": "tsx --tsconfig=tsconfig.base.json apps/cron/src/main.ts"
+    "test:cron": "tsx --tsconfig=tsconfig.base.json apps/cron/src/main.ts",
+    "d-build:cron": "docker build -f apps/cron/Dockerfile -t tourni_cron ."
   },
   "private": true,
   "dependencies": {

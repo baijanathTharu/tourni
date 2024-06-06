@@ -8,9 +8,11 @@ RUN npm i -g yarn
 
 COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile
-RUN yarn db:generate
 
 COPY . .
+
+RUN yarn db:generate
+
 
 RUN npx nx run cron:build --configuration=production --skip-nx-cache
 

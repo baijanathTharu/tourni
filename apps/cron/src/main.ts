@@ -1,12 +1,15 @@
+import { PrismaClient } from '@prisma/client';
 import { config } from 'dotenv';
 
 config({
   path: '.env',
 });
 
-import { getDb } from '@tourni-nx/db';
-
 const IS_LOCAL = process.env.IS_LOCAL;
+
+function getDb() {
+  return new PrismaClient();
+}
 
 const db = getDb();
 
