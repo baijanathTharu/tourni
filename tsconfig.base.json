@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "strict": true,
     "paths": {
-      "@tourni-nx/contract/*": ["libs/contract/src/*"]
+      "@tourni-nx/contract/*": ["libs/contract/src/*"],
+      "@tourni-nx/db": ["libs/db/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
