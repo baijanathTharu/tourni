@@ -81,6 +81,9 @@ export function Navbar() {
 
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
+          <Link href="/practice">Practice</Link>
+        </NavbarItem>
+        <NavbarItem className="hidden lg:flex">
           <Link href="#">Login</Link>
         </NavbarItem>
         <NavbarItem>
