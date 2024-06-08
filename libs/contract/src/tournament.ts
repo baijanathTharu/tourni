@@ -66,6 +66,34 @@ export const tournamentContract = c.router({
       }),
     },
   },
+  runCode: {
+    method: 'POST',
+    path: '/v1/practice/1',
+    responses: {
+      201: BASE_SCHEMA.extend({
+        data: z.array(z.boolean()),
+      }),
+      400: getErrorSchema(),
+      500: getErrorSchema(),
+    },
+    body: z
+      .object({
+        code: z.string(),
+      })
+      .openapi({
+        title: 'Run Code',
+        mediaExamples: {
+          myExample: {
+            value: {
+              code: '// code',
+            },
+            summary: 'Example of a code to run',
+          },
+        },
+      }),
+    summary: 'Create a tournament',
+    description: 'Create a tournament',
+  },
   createTournament: {
     method: 'POST',
     path: '/v1/tournament/create',

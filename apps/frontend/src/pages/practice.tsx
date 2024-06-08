@@ -4,11 +4,14 @@ import { Navbar } from '../components/navbar';
 import { str } from '../two-sum';
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
+import { client } from '../app/query-client';
 
 export function PracticePage() {
   const [code, setCode] = useState(`function main(a: number, b: number) {
 
 }`);
+
+  const runCode = client.tournaments.runCode.useMutation();
 
   const handleEditorChange = (value: string | undefined) => {
     if (value) {
@@ -16,8 +19,23 @@ export function PracticePage() {
     }
   };
 
-  const handleRun = () => {
+  const handleRun = async () => {
     console.log('code', code);
+    await runCode.mutateAsync(
+      {
+        body: {
+          code,
+        },
+      },
+      {
+        onSuccess(data) {
+          console.log('success', data);
+        },
+        onError(error) {
+          console.log('error', error);
+        },
+      }
+    );
   };
 
   return (
@@ -31,8 +49,12 @@ export function PracticePage() {
             </Markdown>
           </section>
           <section className="border-2 p-4">
-            <Button variant="bordered" onClick={handleRun}>
-              Run
+            <Button
+              disabled={runCode.isPending}
+              variant="bordered"
+              onClick={handleRun}
+            >
+              {runCode.isPending ? 'Running...' : 'Run'}
             </Button>
             <Editor
               height="60vh"
@@ -41,6 +63,11 @@ export function PracticePage() {
               defaultValue={code}
               onChange={handleEditorChange}
             />
+            {runCode.isSuccess ? (
+              <pre>
+                Test Cases: {JSON.stringify(runCode.data?.body.data, null, 2)}
+              </pre>
+            ) : null}
           </section>
         </main>
       </div>
