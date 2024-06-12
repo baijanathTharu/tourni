@@ -8,13 +8,12 @@ import { client } from '../app/query-client';
 import { useSocket } from '../app/socket';
 
 export function PracticePage() {
-  const { socket, isConnected } = useSocket();
+  const { socket } = useSocket();
+  const [testCases, setTestCases] = useState('');
 
   const [code, setCode] = useState(`function main(a: number, b: number) {
 
 }`);
-
-  console.log('isConnected', isConnected);
 
   const runCode = client.tournaments.runCode.useMutation();
 
@@ -26,21 +25,31 @@ export function PracticePage() {
 
   const handleRun = async () => {
     console.log('code', code);
-    await runCode.mutateAsync(
-      {
-        body: {
-          code,
-        },
-      },
-      {
-        onSuccess(data) {
-          console.log('success', data);
-        },
-        onError(error) {
-          console.log('error', error);
-        },
-      }
-    );
+
+    socket.emit('practice_problem', {
+      code: code,
+    });
+
+    socket.on('practice_problem_response', (message) => {
+      console.log('practice_problem_response', message);
+      setTestCases(message);
+    });
+
+    // await runCode.mutateAsync(
+    //   {
+    //     body: {
+    //       code,
+    //     },
+    //   },
+    //   {
+    //     onSuccess(data) {
+    //       console.log('success', data);
+    //     },
+    //     onError(error) {
+    //       console.log('error', error);
+    //     },
+    //   }
+    // );
   };
 
   return (
@@ -68,11 +77,7 @@ export function PracticePage() {
               defaultValue={code}
               onChange={handleEditorChange}
             />
-            {runCode.isSuccess ? (
-              <pre>
-                Test Cases: {JSON.stringify(runCode.data?.body.data, null, 2)}
-              </pre>
-            ) : null}
+            {<pre>Test Cases: {JSON.stringify(testCases)}</pre>}
           </section>
         </main>
       </div>

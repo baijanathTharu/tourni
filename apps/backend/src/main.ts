@@ -10,6 +10,9 @@ import compression from 'compression';
 import { contract } from '@tourni-nx/contract/index';
 import { openApiDocument } from './utils/openapi';
 import { router } from './infra/router';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+import { execSync } from 'child_process';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -45,10 +48,49 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('practice_problem', (message) => {
-    console.log('message', message);
+  socket.on('practice_problem', (data) => {
+    let code = data.code;
+    const fileName = 'two-sum.ts';
+    /**
+     function main(a: number, b: number) {
+      // infinite loop
+      let i = 0;
+      function t() {
+          console.log(i++);
+          t();
+      }
+      t();
+    }
+     *
+     */
+    // security issues // sanitize // run code in sandbox mode
+    // case 1: input: 2, 3 output: 5
+    // case 2: input: 15, 9 output: 24
+
+    code += `
+    const out1 = main(2, 3);
+    const out2 = main(15, 9);
+    console.log(out1);
+    console.log(out2);
+    `;
+    writeFileSync(fileName, code);
+    // test cases
+
+    const codePath = join(process.cwd(), fileName);
+
+    const buff = execSync(`tsx ${codePath}`);
+
+    const outs = buff
+      .toString()
+      .split('\n')
+      .filter(Boolean)
+      .map((o) => +o);
+
+    const casesResult = [outs[0] === 5, outs[1] === 24];
+
     io.emit('practice_problem_response', {
-      message: 'practice problem received',
+      casesResult,
+      message: 'Test cases ran successfully',
     });
   });
 
