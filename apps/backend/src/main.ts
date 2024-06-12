@@ -1,7 +1,9 @@
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import { createExpressEndpoints } from '@ts-rest/express';
 import swaggerUi from 'swagger-ui-express';
+import { Server } from 'socket.io';
 import helmet from 'helmet';
 import { randomUUID } from 'crypto';
 import compression from 'compression';
@@ -13,6 +15,7 @@ const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(compression());
 app.use(helmet());
@@ -20,6 +23,7 @@ app.use(helmet());
 app.use(
   cors({
     origin(requestOrigin, callback) {
+      // fix this
       callback(null, true);
     },
   })
@@ -27,6 +31,31 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+const io = new Server(server, {
+  cors: {
+    // fix this
+    origin(requestOrigin, callback) {
+      callback(null, true);
+    },
+  },
+});
+
+// ws connection
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('practice_problem', (message) => {
+    console.log('message', message);
+    io.emit('practice_problem_response', {
+      message: 'practice problem received',
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('client disconnected');
+  });
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 app.use('/api-docs.json', (req, res) => res.send(openApiDocument));
@@ -58,6 +87,6 @@ app.use((error, req, res, _next) => {
   });
 });
 
-app.listen(port, host, () => {
+server.listen(port, host, () => {
   console.log(`[ ready ] http://${host}:${port}`);
 });

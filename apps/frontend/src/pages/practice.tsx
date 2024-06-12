@@ -5,11 +5,16 @@ import { str } from '../two-sum';
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { client } from '../app/query-client';
+import { useSocket } from '../app/socket';
 
 export function PracticePage() {
+  const { socket, isConnected } = useSocket();
+
   const [code, setCode] = useState(`function main(a: number, b: number) {
 
 }`);
+
+  console.log('isConnected', isConnected);
 
   const runCode = client.tournaments.runCode.useMutation();
 
