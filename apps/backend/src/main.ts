@@ -48,7 +48,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('practice_problem', (data) => {
+  socket.on('practice_problem', async (data) => {
     let code = data.code;
     const fileName = 'two-sum.ts';
     /**
@@ -90,6 +90,13 @@ io.on('connection', (socket) => {
       .map((o) => +o);
 
     const casesResult = [outs[0] === 5, outs[1] === 24];
+
+    // TODO: send an event to the message broker and remove hard coded url
+    const res = await fetch('http://localhost:4001/ping');
+    if (res.ok) {
+      const data = await res.text();
+      console.log('from executor', data);
+    }
 
     io.emit('practice_problem_response', {
       casesResult,
