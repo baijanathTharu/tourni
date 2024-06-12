@@ -67,6 +67,9 @@ io.on('connection', (socket) => {
     // case 1: input: 2, 3 output: 5
     // case 2: input: 15, 9 output: 24
 
+    // TODO: upload the code file to bucket
+    // Run the code in an isolated environment
+
     code += `
     const out1 = main(2, 3);
     const out2 = main(15, 9);

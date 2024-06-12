@@ -1,0 +1,56 @@
+{
+  "name": "code-executor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/code-executor/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/code-executor",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/code-executor/src/main.ts",
+        "tsConfig": "apps/code-executor/tsconfig.app.json",
+        "assets": ["apps/code-executor/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "code-executor:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "code-executor:build:development"
+        },
+        "production": {
+          "buildTarget": "code-executor:build:production"
+        }
+      }
+    }
+  }
+}
