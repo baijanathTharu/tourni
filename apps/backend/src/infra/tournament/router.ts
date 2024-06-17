@@ -9,6 +9,9 @@ import {
   updateTournament,
 } from './tournament-infra';
 import { join } from 'path';
+import { LCodeSQSClient } from '@tourni-nx/aws';
+import { env } from '../../utils/config';
+import { randomUUID } from 'crypto';
 
 const s = initServer();
 
@@ -52,6 +55,23 @@ export const tournamentRouter = s.router(tournamentContract, {
       // test cases
 
       const codePath = join(process.cwd(), fileName);
+
+      /**
+       * send message to the queue
+       */
+      const client = new LCodeSQSClient({
+        accessKeyId: env.AWS_KEY_ID,
+        secretAccessKey: env.AWS_SECRET_KEY,
+        region: env.AWS_REGION,
+      });
+
+      await client.sendMessage({
+        QueueUrl: env.PROCESS_QUEUE_URL,
+        MessageBody: JSON.stringify({
+          code,
+          id: randomUUID(),
+        }),
+      });
 
       const buff = execSync(`tsx ${codePath}`);
 
