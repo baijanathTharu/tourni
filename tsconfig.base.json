@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "strict": true,
     "paths": {
+      "@tourni-nx/aws": ["libs/aws/src/index.ts"],
       "@tourni-nx/contract/*": ["libs/contract/src/*"],
       "@tourni-nx/db": ["libs/db/src/index.ts"]
     }

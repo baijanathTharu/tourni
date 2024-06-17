@@ -1,5 +1,5 @@
 function main(a: number, b: number) {
-    return 5
+    return a + b;
 }
       const out1 = main(2, 3);
       const out2 = main(15, 9);

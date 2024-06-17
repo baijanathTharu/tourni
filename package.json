@@ -19,6 +19,7 @@
   "private": true,
   "dependencies": {
     "@anatine/zod-openapi": "^2.2.5",
+    "@aws-sdk/client-sqs": "^3.598.0",
     "@hookform/resolvers": "^3.4.0",
     "@internationalized/date": "^3.5.3",
     "@monaco-editor/react": "^4.6.0",
