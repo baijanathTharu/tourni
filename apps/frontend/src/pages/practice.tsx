@@ -5,10 +5,8 @@ import { str } from '../two-sum';
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { client } from '../app/query-client';
-import { useSocket } from '../app/socket';
 
 export function PracticePage() {
-  const { socket } = useSocket();
   const [testCases, setTestCases] = useState('');
 
   const [code, setCode] = useState(`function main(a: number, b: number) {
@@ -26,30 +24,31 @@ export function PracticePage() {
   const handleRun = async () => {
     console.log('code', code);
 
-    socket.emit('practice_problem', {
-      code: code,
-    });
+    // socket.emit('practice_problem', {
+    //   code: code,
+    // });
 
-    socket.on('practice_problem_response', (message) => {
-      console.log('practice_problem_response', message);
-      setTestCases(message);
-    });
+    // socket.on('practice_problem_response', (message) => {
+    //   console.log('practice_problem_response', message);
+    //   setTestCases(message);
+    // });
 
-    // await runCode.mutateAsync(
-    //   {
-    //     body: {
-    //       code,
-    //     },
-    //   },
-    //   {
-    //     onSuccess(data) {
-    //       console.log('success', data);
-    //     },
-    //     onError(error) {
-    //       console.log('error', error);
-    //     },
-    //   }
-    // );
+    await runCode.mutateAsync(
+      {
+        body: {
+          code,
+        },
+      },
+      {
+        onSuccess(data) {
+          console.log('success', data);
+          setTestCases(JSON.stringify(data.body.data));
+        },
+        onError(error) {
+          console.log('error', error);
+        },
+      }
+    );
   };
 
   return (
