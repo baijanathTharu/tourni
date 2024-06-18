@@ -69,7 +69,11 @@ export class LCodeSQSClient {
   public async receiveMessage(
     input: TReceiveMessageInput
   ): Promise<ReceiveMessageCommandOutput> {
-    const command = new ReceiveMessageCommand(input);
+    const command = new ReceiveMessageCommand({
+      ...input,
+      VisibilityTimeout: 30,
+      MaxNumberOfMessages: 10,
+    });
     const response = await this.getClient().send(command);
     return response;
   }
