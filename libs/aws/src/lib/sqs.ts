@@ -71,7 +71,7 @@ export class LCodeSQSClient {
   ): Promise<ReceiveMessageCommandOutput> {
     const command = new ReceiveMessageCommand({
       ...input,
-      VisibilityTimeout: 30,
+      VisibilityTimeout: 60 * 2,
       MaxNumberOfMessages: 10,
     });
     const response = await this.getClient().send(command);

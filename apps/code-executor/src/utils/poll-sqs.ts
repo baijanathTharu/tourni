@@ -1,5 +1,8 @@
+import { writeFileSync, unlinkSync } from 'fs';
+import { execSync } from 'child_process';
 import { LCodeSQSClient } from '@tourni-nx/aws';
 import { env } from './config';
+import { join } from 'path';
 
 const client = new LCodeSQSClient({
   accessKeyId: env.AWS_KEY_ID,
@@ -16,12 +19,32 @@ interface IMessage {
 async function processMessage(message: IMessage) {
   console.log(`Processing message: ${message.id}`);
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const fileName = `${message.id}.ts`;
+  // process the message
+  writeFileSync(fileName, message.code);
+
+  /**
+   * copy the file into the container
+   */
+  const filePath = join(process.cwd(), fileName);
+  execSync(`docker cp ${filePath} lcode-node-1:/app/${fileName}`);
+
+  /**
+   * exec the code file
+   */
+  const buff = execSync(`docker exec lcode-node-1 bash -c 'tsx ${fileName}'`);
+
+  console.log('output from container', buff.toString());
+
+  if (filePath) {
+    unlinkSync(filePath);
+  }
 
   await client.deleteMessage({
     QueueUrl: env.PROCESS_QUEUE_URL,
     ReceiptHandle: message.receiptHandle,
   });
+  console.log('deleted', message.id);
 }
 
 export async function pollMessages() {
@@ -35,7 +58,19 @@ export async function pollMessages() {
       if (result.Messages && result.Messages.length > 0) {
         await Promise.all(
           result.Messages.map((message) => {
-            console.log('need to process the message:', message);
+            if (message.Body && message.ReceiptHandle) {
+              const code = JSON.parse(message.Body) as {
+                id: string;
+                code: string;
+              };
+              if ('id' in code) {
+                processMessage({
+                  id: code.id,
+                  code: code.code,
+                  receiptHandle: message.ReceiptHandle,
+                });
+              }
+            }
           })
         );
       }
