@@ -5,8 +5,10 @@ import { str } from '../two-sum';
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { client } from '../app/query-client';
+import { useSocket } from '../app/socket';
 
 export function PracticePage() {
+  const { isConnected, socket } = useSocket();
   const [testCases, setTestCases] = useState('');
 
   const [code, setCode] = useState(`function main(a: number, b: number) {
@@ -22,18 +24,7 @@ export function PracticePage() {
   };
 
   const handleRun = async () => {
-    console.log('code', code);
-
-    // socket.emit('practice_problem', {
-    //   code: code,
-    // });
-
-    // socket.on('practice_problem_response', (message) => {
-    //   console.log('practice_problem_response', message);
-    //   setTestCases(message);
-    // });
-
-    await runCode.mutateAsync(
+    const res = await runCode.mutateAsync(
       {
         body: {
           code,
@@ -49,6 +40,14 @@ export function PracticePage() {
         },
       }
     );
+
+    if (res.status === 201) {
+      const codeRunId = res.body.data.id;
+      socket.on(`practice_problem_response_${codeRunId}`, (message) => {
+        console.log('practice_problem_response', message);
+        setTestCases(message.data.output);
+      });
+    }
   };
 
   return (

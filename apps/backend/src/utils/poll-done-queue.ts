@@ -1,5 +1,8 @@
+import { Server } from 'socket.io';
 import { LCodeSQSClient } from '@tourni-nx/aws';
 import { env } from './config';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { IOClient } from './socket';
 
 const client = new LCodeSQSClient({
   accessKeyId: env.AWS_KEY_ID,
@@ -17,8 +20,20 @@ type TDoneMessage = {
 /**
  * send the done output to the frontend client via websocket
  */
-async function processDoneMessages(message: TDoneMessage, handle: string) {
+async function processDoneMessages(
+  io: IOClient,
+  {
+    message,
+    handle,
+  }: {
+    message: TDoneMessage;
+    handle: string;
+  }
+) {
   console.log('Process the done message', message);
+
+  io.emit(`practice_problem_response_${message.id}`, message);
+
   await client.deleteMessage({
     ReceiptHandle: handle,
     QueueUrl: env.DONE_QUEUE_URL,
@@ -26,7 +41,7 @@ async function processDoneMessages(message: TDoneMessage, handle: string) {
   console.log('Processed the done message', message);
 }
 
-export async function pollMessages() {
+export async function pollMessages(io: IOClient) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
@@ -39,7 +54,10 @@ export async function pollMessages() {
           result.Messages.map((message) => {
             if (message.Body && message.ReceiptHandle) {
               const doneMessage = JSON.parse(message.Body) as TDoneMessage;
-              processDoneMessages(doneMessage, message.ReceiptHandle);
+              processDoneMessages(io, {
+                message: doneMessage,
+                handle: message.ReceiptHandle,
+              });
             }
           })
         );

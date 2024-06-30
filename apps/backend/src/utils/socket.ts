@@ -1,5 +1,13 @@
 import { Server } from 'socket.io';
 import http from 'http';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+
+export type IOClient = Server<
+  DefaultEventsMap,
+  DefaultEventsMap,
+  DefaultEventsMap,
+  any
+>;
 
 export function initWS(
   httpServer: http.Server<

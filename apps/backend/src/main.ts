@@ -20,7 +20,7 @@ const server = http.createServer(app);
 
 const io = initWS(server);
 
-pollMessages();
+pollMessages(io);
 
 app.use(compression());
 app.use(helmet());
