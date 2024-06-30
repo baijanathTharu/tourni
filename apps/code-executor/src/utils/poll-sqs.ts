@@ -37,7 +37,7 @@ async function processMessage(message: IMessage) {
 
     console.log('output from container', buff.toString());
 
-    // compare the test cases
+    //TODO: compare the test cases with the output file for each problem
     const outs = buff
       .toString()
       .split('\n')
@@ -46,6 +46,15 @@ async function processMessage(message: IMessage) {
 
     const casesResult = [outs[0] === 5, outs[1] === 24];
     // send the event to the SQS
+    await client.sendMessage({
+      MessageBody: JSON.stringify({
+        id: message.id,
+        data: {
+          output: casesResult,
+        },
+      }),
+      QueueUrl: env.DONE_QUEUE_URL,
+    });
   } catch (error) {
     console.log('Error executing file', error);
   }
