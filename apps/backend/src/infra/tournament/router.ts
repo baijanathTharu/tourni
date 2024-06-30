@@ -73,22 +73,11 @@ export const tournamentRouter = s.router(tournamentContract, {
         }),
       });
 
-      const buff = execSync(`tsx ${codePath}`);
-
-      console.log(buff.toString());
-      const outs = buff
-        .toString()
-        .split('\n')
-        .filter(Boolean)
-        .map((o) => +o);
-
-      const casesResult = [outs[0] === 5, outs[1] === 24];
-
       return {
         status: 201,
         body: {
           isSuccess: true,
-          data: casesResult,
+          data: [],
           message: 'code ran successfully',
         },
       };

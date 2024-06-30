@@ -32,9 +32,13 @@ async function processMessage(message: IMessage) {
   /**
    * exec the code file
    */
-  const buff = execSync(`docker exec lcode-node-1 bash -c 'tsx ${fileName}'`);
+  try {
+    const buff = execSync(`docker exec lcode-node-1 bash -c 'tsx ${fileName}'`);
 
-  console.log('output from container', buff.toString());
+    console.log('output from container', buff.toString());
+  } catch (error) {
+    console.log('Error executing file', error);
+  }
 
   if (filePath) {
     unlinkSync(filePath);

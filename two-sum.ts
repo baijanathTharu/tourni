@@ -1,5 +1,7 @@
 function main(a: number, b: number) {
-    console.log("this is wrong code.")
+while(true) {
+    console.log("hello")
+}
 }
       const out1 = main(2, 3);
       const out2 = main(15, 9);
