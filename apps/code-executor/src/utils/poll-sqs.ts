@@ -36,6 +36,16 @@ async function processMessage(message: IMessage) {
     const buff = execSync(`docker exec lcode-node-1 bash -c 'tsx ${fileName}'`);
 
     console.log('output from container', buff.toString());
+
+    // compare the test cases
+    const outs = buff
+      .toString()
+      .split('\n')
+      .filter(Boolean)
+      .map((o) => +o);
+
+    const casesResult = [outs[0] === 5, outs[1] === 24];
+    // send the event to the SQS
   } catch (error) {
     console.log('Error executing file', error);
   }

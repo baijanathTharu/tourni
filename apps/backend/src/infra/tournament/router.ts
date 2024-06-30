@@ -28,7 +28,6 @@ export const tournamentRouter = s.router(tournamentContract, {
   // mutations
   runCode: async ({ body: { code } }) => {
     try {
-      const fileName = 'two-sum.ts';
       /**
        function main(a: number, b: number) {
         // infinite loop
@@ -51,10 +50,6 @@ export const tournamentRouter = s.router(tournamentContract, {
       console.log(out1);
       console.log(out2);
       `;
-      writeFileSync(fileName, code);
-      // test cases
-
-      const codePath = join(process.cwd(), fileName);
 
       /**
        * send message to the queue
@@ -65,11 +60,13 @@ export const tournamentRouter = s.router(tournamentContract, {
         region: env.AWS_REGION,
       });
 
+      const eventId = randomUUID();
+
       await client.sendMessage({
         QueueUrl: env.PROCESS_QUEUE_URL,
         MessageBody: JSON.stringify({
           code,
-          id: randomUUID(),
+          id: eventId,
         }),
       });
 
@@ -77,7 +74,9 @@ export const tournamentRouter = s.router(tournamentContract, {
         status: 201,
         body: {
           isSuccess: true,
-          data: [],
+          data: {
+            id: eventId,
+          },
           message: 'code ran successfully',
         },
       };

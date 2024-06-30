@@ -71,7 +71,9 @@ export const tournamentContract = c.router({
     path: '/v1/practice/1',
     responses: {
       201: BASE_SCHEMA.extend({
-        data: z.array(z.boolean()),
+        data: z.object({
+          id: z.string(),
+        }),
       }),
       400: getErrorSchema(),
       500: getErrorSchema(),
